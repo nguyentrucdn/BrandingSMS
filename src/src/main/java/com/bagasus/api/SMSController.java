@@ -1,4 +1,4 @@
-package bagasus.api;
+package com.bagasus.api;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
