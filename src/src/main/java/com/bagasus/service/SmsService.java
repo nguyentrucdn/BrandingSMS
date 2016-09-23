@@ -1,5 +1,7 @@
 package com.bagasus.service;
 
+import com.bagasus.model.SmsResult;
+
 /**
  * Created by thainguy on 9/21/2016.
  */

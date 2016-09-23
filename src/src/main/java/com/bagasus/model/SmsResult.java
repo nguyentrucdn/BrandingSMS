@@ -1,4 +1,4 @@
-package com.bagasus.service;
+package com.bagasus.model;
 
 import java.io.Serializable;
 

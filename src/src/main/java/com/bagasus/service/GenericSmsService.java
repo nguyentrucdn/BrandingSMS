@@ -1,5 +1,6 @@
 package com.bagasus.service;
 
+import com.bagasus.model.SmsResult;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,7 @@
 package com.bagasus.service;
 
 import com.bagasus.ConfigurationProvider;
+import com.bagasus.model.RestResult;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;

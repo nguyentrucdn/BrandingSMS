@@ -1,6 +1,7 @@
 package com.bagasus.service;
 
 import com.bagasus.ConfigurationProvider;
+import com.bagasus.model.SmsResult;
 import com.bagasus.sms.viettel.CcApi;
 import com.bagasus.sms.viettel.CcApi_Service;
 import com.bagasus.sms.viettel.Result;

@@ -34,4 +34,8 @@ public class SMSController {
 
         return phone + " - " + message;
     }
+
+    public String configure(){
+        return "OK";
+    }
 }
