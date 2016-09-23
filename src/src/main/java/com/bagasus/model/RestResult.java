@@ -11,6 +11,11 @@ public class RestResult implements Serializable{
 
     public RestResult(){}
 
+    public RestResult(int error, String message){
+        this.error = error;
+        this.message = message;
+    }
+
     public int getError() {
         return error;
     }

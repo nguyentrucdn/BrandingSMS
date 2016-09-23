@@ -22,7 +22,7 @@ public class App {
         ClassLoader classLoader = App.class.getClassLoader();
         Config rootConf = ConfigFactory.parseResources(classLoader, "application.conf");
         ConfigurationProvider.Instance().setConfig(rootConf);
-        System.out.print(rootConf.entrySet());
+        ConfigurationProvider.Instance().initialize();
 
         SpringApplication.run(App.class, args);
     }

@@ -10,7 +10,7 @@ import java.util.Hashtable;
 /**
  * Created by thainguy on 9/21/2016.
  */
-@Service
+@Service("genericSmsServie")
 public class GenericSmsService implements SmsService, SmsRegistry {
 
     private Dictionary<String, SmsService> smsServies = new Hashtable<>();

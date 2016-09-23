@@ -20,19 +20,18 @@ public class ViettelSmsService implements SmsService {
     private String pass;
     private String cpc;
     private String brand;
-    private boolean isEnable;
+    private String command;
 
     @Autowired
     private SmsRegistry smsRegistry;
 
     @Override
     public boolean isEnable() {
-        return isEnable;
+        return ConfigurationProvider.Instance().getSiteConfiguration().isEnableVietel();
     }
 
     @Override
     public void setEnable(boolean isEnable) {
-        this.isEnable = isEnable;
     }
 
     @Override
@@ -44,7 +43,7 @@ public class ViettelSmsService implements SmsService {
     public SmsResult send(String number, String message) {
         CcApi_Service serviceApi = new CcApi_Service();
         CcApi api = serviceApi.getCcApiPort();
-        Result result = api.wsCpMt(user, pass, cpc, "1", "84976969454", number, brand, "bulksms", message, "0");
+        Result result = api.wsCpMt(user, pass, cpc, "1", "84976969454", number, brand, command, message, "0");
         return new SmsResult(result.getResult(), result.getMessage());
     }
 
@@ -54,7 +53,7 @@ public class ViettelSmsService implements SmsService {
         this.pass = ConfigurationProvider.Instance().getString("bagasus.sms.viettel.pass");
         this.cpc = ConfigurationProvider.Instance().getString("bagasus.sms.viettel.cpc");
         this.brand = ConfigurationProvider.Instance().getString("bagasus.sms.viettel.brand");
-        this.isEnable = "true".equals(ConfigurationProvider.Instance().getString("bagasus.sms.viettel.enable"));
+        this.command = ConfigurationProvider.Instance().getString("bagasus.sms.viettel.command");
 
         smsRegistry.register(this);
     }

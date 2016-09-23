@@ -1,12 +1,14 @@
 package com.bagasus.api;
 
+import com.bagasus.ConfigurationProvider;
+import com.bagasus.model.RestResult;
+import com.bagasus.model.SiteConfiguration;
 import com.bagasus.service.GenericSmsService;
 import com.bagasus.service.SercurityService;
+import com.bagasus.service.SmsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by thainguy on 8/9/2016.
@@ -16,7 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class SMSController {
 
     @Autowired
-    private GenericSmsService smsService;
+    @Qualifier("genericSmsServie")
+    private SmsService smsService;
 
     @Autowired
     private SercurityService sercurityService;
@@ -27,15 +30,23 @@ public class SMSController {
     }
 
     @RequestMapping("send")
-    public String send(@RequestHeader("token") String token, @RequestParam(value="phone")String phone, @RequestParam(value="message") String message){
+    public RestResult send(@RequestHeader("token") String token, @RequestParam(value="phone")String phone, @RequestParam(value="message") String message){
         if(sercurityService.verifyToken(token)){
             smsService.send(phone, message);
         }
 
-        return phone + " - " + message;
+        return new RestResult(0, "OK");
     }
 
-    public String configure(){
-        return "OK";
+    @RequestMapping( value = "configure", method = RequestMethod.POST)
+    public RestResult configure(@RequestBody SiteConfiguration configuration){
+        ConfigurationProvider.Instance().setSiteConfiguration(configuration);
+        return new RestResult(0, "OK");
     }
+
+    @RequestMapping( value = "configure", method = RequestMethod.GET)
+    public SiteConfiguration getConfigure(){
+        return ConfigurationProvider.Instance().getSiteConfiguration();
+    }
+
 }
