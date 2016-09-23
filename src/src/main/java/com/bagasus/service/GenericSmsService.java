@@ -13,7 +13,7 @@ import java.util.Hashtable;
 @Service("genericSmsServie")
 public class GenericSmsService implements SmsService, SmsRegistry {
 
-    private Dictionary<String, SmsService> smsServies = new Hashtable<>();
+    private Hashtable<String, SmsService> smsServies = new Hashtable<>();
 
     @Override
     public boolean isEnable() {
@@ -38,11 +38,21 @@ public class GenericSmsService implements SmsService, SmsRegistry {
     }
 
     @Override
+    public boolean isMatch(String number) {
+        return false;
+    }
+
+    @Override
     public void register(SmsService service) {
         smsServies.put(service.getIdentity(), service);
     }
 
     protected SmsService getSmsService(String phone){
+        for (SmsService service: smsServies.values()) {
+            if(service.isEnable() && service.isMatch(phone)){
+                return service;
+            }
+        }
         return smsServies.get("viettel");
     }
 }

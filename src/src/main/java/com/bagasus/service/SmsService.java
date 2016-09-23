@@ -10,4 +10,5 @@ public interface SmsService {
     void setEnable(boolean isEnable);
     String getIdentity();
     SmsResult send(String number, String message);
+    boolean isMatch(String number);
 }

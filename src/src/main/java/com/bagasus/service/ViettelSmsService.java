@@ -21,6 +21,7 @@ public class ViettelSmsService implements SmsService {
     private String cpc;
     private String brand;
     private String command;
+    private String[] header;
 
     @Autowired
     private SmsRegistry smsRegistry;
@@ -47,6 +48,23 @@ public class ViettelSmsService implements SmsService {
         return new SmsResult(result.getResult(), result.getMessage());
     }
 
+    @Override
+    public boolean isMatch(String number) {
+        String stdNumber = number;
+        if(stdNumber.startsWith("84")){
+            stdNumber.replaceFirst("84", "0");
+        }
+        if(stdNumber.startsWith("+84")){
+            stdNumber.replace("+84", "0");
+        }
+        for (String head: header) {
+            if(stdNumber.startsWith(head)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     @PostConstruct
     public void initialize(){
         this.user = ConfigurationProvider.Instance().getString("bagasus.sms.viettel.user");
@@ -54,6 +72,7 @@ public class ViettelSmsService implements SmsService {
         this.cpc = ConfigurationProvider.Instance().getString("bagasus.sms.viettel.cpc");
         this.brand = ConfigurationProvider.Instance().getString("bagasus.sms.viettel.brand");
         this.command = ConfigurationProvider.Instance().getString("bagasus.sms.viettel.command");
+        this.header = ConfigurationProvider.Instance().getString("bagasus.sms.viettel.header").split(",");
 
         smsRegistry.register(this);
     }
