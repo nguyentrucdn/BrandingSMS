@@ -13,6 +13,8 @@ public class SiteConfiguration implements Serializable {
     private String logPath = "https://yeahbo-collector-dot-yeahbo-carrier.appspot.com/_ah/api/agent/log/entry/put";
     private int roleToBeVerified = 33554432;
     private String appId;
+    private ViettelConfig viettelConfig;
+    private VnptConfig vnptConfig;
 
     public boolean isEnableVietel() {
         return enableVietel;
@@ -68,5 +70,21 @@ public class SiteConfiguration implements Serializable {
 
     public void setAppId(String appId) {
         this.appId = appId;
+    }
+
+    public ViettelConfig getViettelConfig() {
+        return viettelConfig;
+    }
+
+    public void setViettelConfig(ViettelConfig viettelConfig) {
+        this.viettelConfig = viettelConfig;
+    }
+
+    public VnptConfig getVnptConfig() {
+        return vnptConfig;
+    }
+
+    public void setVnptConfig(VnptConfig vnptConfig) {
+        this.vnptConfig = vnptConfig;
     }
 }

@@ -2,17 +2,13 @@ package com.bagasus.api;
 
 import com.bagasus.ConfigurationProvider;
 import com.bagasus.model.RestResult;
-import com.bagasus.model.SiteConfiguration;
-import com.bagasus.service.GenericSmsService;
+import com.bagasus.model.external.SiteConfigurationExternal;
 import com.bagasus.service.SercurityService;
 import com.bagasus.service.SmsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * Created by thainguy on 8/9/2016.
- */
 @RestController
 @RequestMapping("/sms")
 public class SMSController {
@@ -30,23 +26,40 @@ public class SMSController {
     }
 
     @RequestMapping("send")
-    public RestResult send(@RequestHeader("token") String token, @RequestParam(value="phone")String phone, @RequestParam(value="message") String message){
-        if(sercurityService.verifyToken(token)){
+    public RestResult send(@RequestHeader("Authentication") String token, @RequestHeader("YCAppId") String appId, @RequestParam(value="phone")String phone, @RequestParam(value="message") String message){
+        int verifyToken = sercurityService.verifyToken(token, appId);
+        if(verifyToken == 0){
             smsService.send(phone, message);
+            return createResult(0, "");
         }
-
-        return new RestResult(0, "OK");
+        return createResult(verifyToken, "");
     }
 
     @RequestMapping( value = "configure", method = RequestMethod.POST)
-    public RestResult configure(@RequestBody SiteConfiguration configuration){
-        ConfigurationProvider.Instance().setSiteConfiguration(configuration);
-        return new RestResult(0, "OK");
+    public RestResult configure(@RequestHeader("Authentication") String token, @RequestHeader("YCAppId") String appId, @RequestBody SiteConfigurationExternal configuration){
+        int verifyToken = sercurityService.verifyToken(token, appId);
+        if(verifyToken == 0){
+            ConfigurationProvider.Instance().updateConfig(configuration);
+            return createResult(0, "");
+        }
+        return createResult(verifyToken, "");
     }
 
     @RequestMapping( value = "configure", method = RequestMethod.GET)
-    public SiteConfiguration getConfigure(){
-        return ConfigurationProvider.Instance().getSiteConfiguration();
+    public RestResult getConfigure(@RequestHeader("Authentication") String token, @RequestHeader("YCAppId") String appId){
+        int verifyToken = sercurityService.verifyToken(token, appId);
+        if(verifyToken == 0){
+            return createResult(0, ConfigurationProvider.Instance().getGson().toJson(
+                    ConfigurationProvider.Instance().getSiteConfiguration()));
+        }
+        return createResult(verifyToken, "");
+    }
+
+    private RestResult createResult(int error, String message){
+        RestResult result = new RestResult();
+        result.setError(error);
+        result.setMessage(message);
+        return result;
     }
 
 }

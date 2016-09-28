@@ -2,6 +2,7 @@ package com.bagasus.service;
 
 import com.bagasus.ConfigurationProvider;
 import com.bagasus.model.SmsResult;
+import com.bagasus.model.ViettelConfig;
 import com.bagasus.sms.viettel.CcApi;
 import com.bagasus.sms.viettel.CcApi_Service;
 import com.bagasus.sms.viettel.Result;
@@ -16,12 +17,7 @@ import javax.annotation.PostConstruct;
 @Service
 public class ViettelSmsService implements SmsService {
 
-    private String user;
-    private String pass;
-    private String cpc;
-    private String brand;
-    private String command;
-    private String[] header;
+    private String command = "bulksms";
 
     @Autowired
     private SmsRegistry smsRegistry;
@@ -42,9 +38,10 @@ public class ViettelSmsService implements SmsService {
 
     @Override
     public SmsResult send(String number, String message) {
+        ViettelConfig config = ConfigurationProvider.Instance().getSiteConfiguration().getViettelConfig();
         CcApi_Service serviceApi = new CcApi_Service();
         CcApi api = serviceApi.getCcApiPort();
-        Result result = api.wsCpMt(user, pass, cpc, "1", "84976969454", number, brand, command, message, "0");
+        Result result = api.wsCpMt(config.getUser(), config.getPass(), config.getCpc(), "1", "84976969454", number, config.getBrand(), command, message, "0");
         return new SmsResult(result.getResult(), result.getMessage());
     }
 
@@ -57,6 +54,7 @@ public class ViettelSmsService implements SmsService {
         if(stdNumber.startsWith("+84")){
             stdNumber.replace("+84", "0");
         }
+        String[] header = ConfigurationProvider.Instance().getSiteConfiguration().getViettelConfig().getHeader();
         for (String head: header) {
             if(stdNumber.startsWith(head)){
                 return true;
@@ -67,13 +65,6 @@ public class ViettelSmsService implements SmsService {
 
     @PostConstruct
     public void initialize(){
-        this.user = ConfigurationProvider.Instance().getString("bagasus.sms.viettel.user");
-        this.pass = ConfigurationProvider.Instance().getString("bagasus.sms.viettel.pass");
-        this.cpc = ConfigurationProvider.Instance().getString("bagasus.sms.viettel.cpc");
-        this.brand = ConfigurationProvider.Instance().getString("bagasus.sms.viettel.brand");
-        this.command = ConfigurationProvider.Instance().getString("bagasus.sms.viettel.command");
-        this.header = ConfigurationProvider.Instance().getString("bagasus.sms.viettel.header").split(",");
-
         smsRegistry.register(this);
     }
 }

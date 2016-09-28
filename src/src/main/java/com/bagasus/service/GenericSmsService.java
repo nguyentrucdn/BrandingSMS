@@ -34,7 +34,22 @@ public class GenericSmsService implements SmsService, SmsRegistry {
     @Async
     public SmsResult send(String number, String message) {
         SmsService service = getSmsService(number);
-        return service.send(number, message);
+        SmsResult result = null;
+        int retryCount = 0;
+        do {
+            try {
+                return service.send(number, message);
+            } catch(Exception e){
+                result = new SmsResult(400, e.getMessage());
+            }
+            retryCount ++;
+            try {
+                Thread.sleep(20 * 1000); // Sleep 20s
+            } catch (InterruptedException e) {
+            }
+        } while (retryCount < 3);
+
+        return result;
     }
 
     @Override
