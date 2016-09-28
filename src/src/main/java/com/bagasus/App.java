@@ -19,15 +19,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 public class App {
     public static void main(String[] args){
 
-        javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(
-                new javax.net.ssl.HostnameVerifier(){
-
-                    public boolean verify(String hostname,
-                                          javax.net.ssl.SSLSession sslSession) {
-                        return true;
-                    }
-                });
-
         ClassLoader classLoader = App.class.getClassLoader();
         Config rootConf = ConfigFactory.parseResources(classLoader, "application.conf");
         ConfigurationProvider.Instance().setConfig(rootConf);

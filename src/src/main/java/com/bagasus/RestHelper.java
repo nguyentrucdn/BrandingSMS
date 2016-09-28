@@ -29,7 +29,7 @@ public class RestHelper {
 
     private static RestTemplate buildRestTemplate(){
         HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory(
-                HttpClientBuilder.create().setProxy(new HttpHost("proxy.houston.hpecorp.net", 8080)).build());
+                HttpClientBuilder.create().build());
         RestTemplate restTemplate = new RestTemplate(clientHttpRequestFactory);
         return restTemplate;
     }
